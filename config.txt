@@ -1,0 +1,2 @@
+Comp ativado 10 8080
+

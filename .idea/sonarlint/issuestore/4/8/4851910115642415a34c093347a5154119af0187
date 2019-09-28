@@ -1,0 +1,11 @@
+
+Ÿsquid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(“–ýþ8ÕšÒ“Ï-
+Ssquid:S1068	"0Remove this unused "serverSocket" private field.(“—Ó¿ýÿÿÿÿ8è¨Æ“Ï-
+Osquid:S1068
+"2Remove this unused "deviceSettings" private field.(æ“›t8è¨Æ“Ï-
+ˆsquid:S1149"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(€Öþ«ýÿÿÿÿ8è¨Æ“Ï-
+ˆsquid:S1149"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(³Ýª›ùÿÿÿÿ8è¨Æ“Ï-
+ˆsquid:S1149"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(Ñç¹¹ÿÿÿÿÿ8è¨Æ“Ï-
+Nsquid:S1068"+Remove this unused "servers" private field.(Ñç¹¹ÿÿÿÿÿ8è¨Æ“Ï-
+Psquid:S1068"-Remove this unused "processes" private field.(€Öþ«ýÿÿÿÿ8è¨Æ“Ï-
+Nsquid:S1068"+Remove this unused "clients" private field.(³Ýª›ùÿÿÿÿ8è¨Æ“Ï-
