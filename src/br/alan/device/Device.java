@@ -131,4 +131,5 @@ public class Device implements Runnable {
     protected void print(String message) {
         System.out.println(" " + getName() + " > " + message);
     }
+
 }
