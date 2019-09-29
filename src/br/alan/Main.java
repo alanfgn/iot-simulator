@@ -9,11 +9,11 @@ import java.util.Scanner;
 public class Main {
 
     public static List<Thread> processos =new ArrayList<>();
-    public static String[] automation = { "run config.txt devices.txt"};
+    public static String[] automation = {"run config-1.txt", "run config-2.txt devices.txt", "run config.txt devices.txt"};
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+//        Scanner sc = new Scanner(System.in);
 
         for(String l: automation){
             Runnable runnable = Terminal.interpret(l);
@@ -22,20 +22,20 @@ public class Main {
             processos.add(thread);
         }
 
-        while (true) {
-            String command = sc.nextLine();
-
-            try{
-
-                Runnable runnable = Terminal.interpret(command);
-                Thread thread = new Thread(runnable);
-                thread.start();
-                processos.add(thread);
-
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
+//        while (true) {
+//            String command = sc.nextLine();
+//
+//            try{
+//
+//                Runnable runnable = Terminal.interpret(command);
+//                Thread thread = new Thread(runnable);
+//                thread.start();
+//                processos.add(thread);
+//
+//            } catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
     }
 
 

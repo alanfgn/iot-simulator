@@ -5,10 +5,10 @@ import java.util.List;
 
 public enum GarbageTypeEnum {
 
-    METAL(1),
-    GLASS(2),
-    PLASTIC(3),
-    PAPER(4);
+    METAL(0),
+    GLASS(1),
+    PLASTIC(2),
+    PAPER(3);
 
     private Integer index;
 

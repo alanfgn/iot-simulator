@@ -31,36 +31,40 @@ public class DeviceClient {
         this.deviceSettings = deviceSettings;
     }
 
-    public OutputStream getOutputStream() throws IOException {
+    public String getName(){
+        return this.deviceSettings.getName();
+    }
+
+    public  OutputStream getOutputStream() throws IOException {
         return this.socket.getOutputStream();
     }
 
-    public InputStream getInputStream() throws IOException {
+    public  InputStream getInputStream() throws IOException {
         return this.socket.getInputStream();
     }
 
 
-    public PrintStream getPrintStream() throws IOException {
-        if (this.printStream == null) {
+    public  PrintStream getPrintStream() throws IOException {
+//        if (this.printStream == null) {
             return new PrintStream(this.getOutputStream());
-        }
-        return this.printStream;
+//        }
+//        return this.printStream;
     }
 
-    public Scanner getScanner() throws IOException {
-        if (this.scanner == null) {
+    public  Scanner getScanner() throws IOException {
+//        if (this.scanner == null) {
             return new Scanner(this.getInputStream());
-        }
-        return this.scanner;
+//        }
+//        return this.scanner;
     }
 
-    public void send(String message) throws IOException {
+    public synchronized void send(String message) throws IOException {
         PrintStream printStream = getPrintStream();
         printStream.println(message);
         printStream.flush();
     }
 
-    public void printAllMessages() throws IOException {
+    public  void printAllMessages() throws IOException {
         Scanner sc = this.getScanner();
 
         while (sc.hasNextLine()) {
@@ -70,7 +74,7 @@ public class DeviceClient {
         this.device.print(" Ending conection with " + deviceSettings.getName());
     }
 
-    public String nextMessage() throws IOException {
+    public  String nextMessage() throws IOException {
         Scanner sc = this.getScanner();
 
         if (sc.hasNextLine()) {
@@ -78,5 +82,17 @@ public class DeviceClient {
         }
 
         return null;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
+    public  void die() throws IOException {
+        this.socket.close();
     }
 }

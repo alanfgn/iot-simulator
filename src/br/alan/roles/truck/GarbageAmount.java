@@ -24,11 +24,17 @@ public class GarbageAmount {
         this.garbagesAmount = garbagesAmount;
     }
 
-    public synchronized void setGarbagesAmount(String garbagesAmount) {
+    public synchronized void setGarbagesAmount(String garbagesAmount, Integer step) throws GarbageOverFlowException{
         double[] amount = new double[this.garbagesAmount.length];
 
         for (int i = 0; i < this.garbagesAmount.length; i++) {
-            amount[i] = Double.valueOf(garbagesAmount.charAt(i));
+
+            double value = Double.valueOf(garbagesAmount.substring(step * i,(step * i) +1));
+
+            if (value > 1d || value < 0d)
+                throw new GarbageOverFlowException();
+
+            amount[i] = value;
         }
 
         this.setGarbagesAmount(amount);

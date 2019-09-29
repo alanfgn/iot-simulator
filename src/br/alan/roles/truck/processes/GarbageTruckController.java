@@ -41,12 +41,13 @@ public class GarbageTruckController implements Runnable {
                 deviceSettings = device.getRandomDeviceByRole(Role.RECYCLING_TRUCK);
                 deviceClient = device.connect(deviceSettings.getName());
 
-                deviceClient.send("MANDA");
+                deviceClient.send(device.getDeviceSettings().getName()+" STATUS "+deviceClient.getName());
+
 
                 garbageAmountString = deviceClient.nextMessage();
-                response = garbageAmountString.split(garbageAmountString, ' ');
+                response = garbageAmountString.split(" ");
 
-                this.garbageTruckProfile.getRecyclingCenterGarbageAmount().setGarbagesAmount(response[1]);
+                this.garbageTruckProfile.getRecyclingCenterGarbageAmount().setGarbagesAmount(response[1], 1);
 
                 if (!this.garbageTruckProfile.getRecyclingCenterGarbageAmount().isFull() && this.garbageTruckProfile.getGarbageAmount().isAny()) {
                     device.print("Indo pra central de reciclagem");
@@ -61,8 +62,12 @@ public class GarbageTruckController implements Runnable {
                         this.garbageTruckProfile.getRecyclingCenterGarbageAmount().sumGarbageAmount(garbageTypeEnum, 1);
                     }
 
-                    deviceClient.send("ESVAZIA BEBE" + garbageAmount.toString());
+                    deviceClient.send(device.getDeviceSettings().getName()+" DESCARREGAR "+deviceClient.getName());
+                    deviceClient.send(device.getDeviceSettings().getName()+" "+garbageAmount.toString()+" "+deviceClient.getName());
+
                 }
+
+                deviceClient.die();
 
                 if (!this.garbageTruckProfile.getGarbageAmount().isFull()) {
                     deviceSettings = device.getRandomDeviceByRole(Role.CONTAINER);
@@ -70,20 +75,27 @@ public class GarbageTruckController implements Runnable {
 
                     device.print("Indo pra um container");
 
-                    deviceClient.send("STATUS");
+                    deviceClient.send(device.getDeviceSettings().getName()+" STATUS "+deviceClient.getName());
+
                     garbageAmountString = deviceClient.nextMessage();
-                    response = garbageAmountString.split(garbageAmountString, ' ');
+                    response = garbageAmountString.split(" ");
                     garbageAmount = new GarbageAmount();
-                    garbageAmount.setGarbagesAmount(response[1]);
+                    garbageAmount.setGarbagesAmount(response[1], 1);
 
                     if (!this.garbageTruckProfile.getGarbageAmount().isFull() && garbageAmount.isAny()) {
                         GarbageAmount garbageAmountAux = new GarbageAmount();
 
                         for (GarbageTypeEnum garbageTypeEnum : GarbageTruckRole.possibleGarbagesToDischarge(garbageAmount, this.garbageTruckProfile.getGarbageAmount())){
-                            garbageAmountAux.sumGarbageAmount(garbageTypeEnum, -1);
+                            garbageAmountAux.sumGarbageAmount(garbageTypeEnum, 1);
                             this.garbageTruckProfile.getGarbageAmount().sumGarbageAmount(garbageTypeEnum, 1);
                         }
+
+                        deviceClient.send(device.getDeviceSettings().getName()+" DESCARREGAR "+deviceClient.getName());
+                        deviceClient.send(device.getDeviceSettings().getName()+" "+garbageAmountAux.toString()+" "+deviceClient.getName());
                     }
+
+
+                    deviceClient.die();
                 }
             }
 
