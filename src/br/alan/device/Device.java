@@ -1,16 +1,16 @@
 package br.alan.device;
 
-import br.alan.device.processes.DeviceProcessesFactory;
 import br.alan.device.processes.PrintSocketMessages;
-import br.alan.device.processes.RandomTemperatures;
-import br.alan.profiles.Profile;
-import br.alan.profiles.ProfileFactory;
+import br.alan.roles.RoleFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Device implements Runnable {
 
@@ -23,6 +23,7 @@ public class Device implements Runnable {
     private List<Thread> processes = new Vector<>();
 
     private List<DeviceSettings> knownDevices = new ArrayList<>();
+    private Random rd = new Random();
 
     public Device(DeviceSettings deviceSettings, List<DeviceSettings> knownDevices) {
         this.deviceSettings = deviceSettings;
@@ -36,35 +37,30 @@ public class Device implements Runnable {
     @Override
     public void run() {
         try {
+
             this.serverSocket = new ServerSocket(deviceSettings.getPort());
-            this.print(" Server ouvindo na porta: " + deviceSettings.getPort());
+            this.print(" Ouvindo na porta: " + deviceSettings.getPort());
 
-            if (this.deviceSettings.getState().equals(StateDeviceEnum.ATIVADO)) {
+            if (this.deviceSettings.getState().equals(StateDeviceEnum.ATIVADO)
+                    && this.deviceSettings.getRole() != null) {
 
-                for (String processName : this.deviceSettings.getMainProcesses()) {
-                    Runnable process = DeviceProcessesFactory.getDeviceProcess(processName, this);
+                this.print("Rodando processos do papel: " + this.deviceSettings.getRole());
+
+                for (Runnable process : RoleFactory
+                        .getDeviceProcess(this.deviceSettings.getRole(), this).getProcesses()) {
+
                     this.execute(process);
+                    this.print("Rodando " + process.getClass().getName());
                 }
-
-                if (this.deviceSettings.getProfile() != null) {
-                    for (Runnable process : ProfileFactory
-                            .getDeviceProcess(this.deviceSettings.getProfile(), this)
-                            .getProcesses()) {
-                        this.execute(process);
-                    }
-                }
-
             }
 
             while (true) {
                 DeviceClient deviceClient = new DeviceClient(serverSocket.accept(), this);
                 this.print("Recebendo conexão");
 
-                this.execute(new PrintSocketMessages(deviceClient));
-                deviceClient.send(deviceSettings.getServerApresentation());
-
                 this.clients.add(deviceClient);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
             this.suicide();
@@ -72,31 +68,43 @@ public class Device implements Runnable {
 
     }
 
-    public void connect(String name, String host, Integer port) throws IOException {
-        DeviceSettings deviceSettings = new DeviceSettings(name, host, port);
-        this.knownDevices.add(deviceSettings);
-        this.connect(name);
+    public DeviceClient connect(String name, String host, Integer port) throws IOException {
+        this.knownDevices.add(new DeviceSettings(name, host, port));
+        return this.connect(name);
+    }
+
+    public DeviceClient connect(String name, String host, Integer port, String role) throws IOException {
+        this.knownDevices.add(new DeviceSettings(name, host, port, role));
+        return this.connect(name);
     }
 
     public DeviceClient connect(String name) throws IOException {
-        DeviceSettings clientDevice = knownDevices.stream().filter(x -> x.getName().equals(name)).findFirst().orElse(null);
-        DeviceClient deviceClient = new DeviceClient(clientDevice, this);
+        DeviceSettings clientDevice = knownDevices
+                .stream()
+                .filter(x -> x.getName().equals(name)).findFirst().orElse(null);
 
-        this.execute(new PrintSocketMessages(deviceClient));
-        deviceClient.send(this.deviceSettings.getClientApresentation(name));
+        DeviceClient deviceClient = new DeviceClient(clientDevice, this);
+        this.print("Conectando com: " + clientDevice.getName());
+
         this.servers.add(deviceClient);
+
         return deviceClient;
     }
 
-    public void execute(Runnable process) {
+    public Thread execute(Runnable process) {
         Thread thread = new Thread(process);
         thread.start();
 
+        this.print("Executando " + process.getClass().getName());
+
         this.processes.add(thread);
+        return thread;
     }
 
     private void suicide() {
         this.killAllProcesses();
+
+        this.print(" - Suicide - ");
         Thread.currentThread().interrupt();
     }
 
@@ -112,24 +120,20 @@ public class Device implements Runnable {
         return servers;
     }
 
-    public String getName() {
-        return this.deviceSettings.getName();
-    }
-
-    public Integer getUpdateTime() {
-        return this.deviceSettings.getUpdatePeriod();
-    }
-
     public DeviceSettings getDeviceSettings() {
         return deviceSettings;
     }
 
-    public void setDeviceSettings(DeviceSettings deviceSettings) {
-        this.deviceSettings = deviceSettings;
+    public void print(String message) {
+        System.out.println(" " + this.deviceSettings.getName() + " > " + message);
     }
 
-    protected void print(String message) {
-        System.out.println(" " + getName() + " > " + message);
+    public DeviceSettings getRandomDeviceByRole(String role){
+        List<DeviceSettings> devices = this.knownDevices.stream()
+                .filter(kd -> kd.getRole()!= null && kd.getRole().equals(role))
+                .collect(Collectors.toList());
+
+        return devices.get(rd.nextInt(devices.size()));
     }
 
 }

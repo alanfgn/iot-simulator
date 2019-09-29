@@ -1,2 +1,1 @@
-Comp ativado 10 8080
-
+Caminhao ativado 10 8080 CA

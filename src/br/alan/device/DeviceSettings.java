@@ -6,25 +6,33 @@ import java.util.List;
 public class DeviceSettings {
 
     private String name;
-    private Integer port;
     private String host;
-    private StateDeviceEnum state;
-    private Integer updatePeriod;
+    private Integer port;
+    private String role;
 
-    private String profile;
-    private List<String> mainProcesses = new ArrayList<>();
+    private StateDeviceEnum state;
+    private Integer updateTime;
 
     public DeviceSettings(String name, String host, Integer port) {
         this.name = name;
-        this.port = port;
         this.host = host;
+        this.port = port;
     }
 
-    public DeviceSettings(String name, Integer port, StateDeviceEnum state, Integer updatePeriod) {
+    public DeviceSettings(String name, String host, Integer port, String role) {
+        this.name = name;
+        this.host = host;
+        this.port = port;
+        this.role = role;
+    }
+
+    public DeviceSettings(String name, Integer port, String role, StateDeviceEnum state, Integer updateTime) {
         this.name = name;
         this.port = port;
+        this.role = role;
+
         this.state = state;
-        this.updatePeriod = updatePeriod;
+        this.updateTime = updateTime;
     }
 
     public String getName() {
@@ -35,6 +43,14 @@ public class DeviceSettings {
         this.name = name;
     }
 
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
     public Integer getPort() {
         return port;
     }
@@ -43,12 +59,12 @@ public class DeviceSettings {
         this.port = port;
     }
 
-    public String getHost() {
-        return host;
+    public String getRole() {
+        return role;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public StateDeviceEnum getState() {
@@ -59,38 +75,19 @@ public class DeviceSettings {
         this.state = state;
     }
 
-    public Integer getUpdatePeriod() {
-        return updatePeriod;
+    public Integer getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdatePeriod(Integer updatePeriod) {
-        this.updatePeriod = updatePeriod;
+    public void setUpdateTime(Integer updateTime) {
+        this.updateTime = updateTime;
     }
 
-    public String getServerApresentation(){
-        if(this.state.equals(StateDeviceEnum.DESATIVADO)){
-            return state.getName();
-        }
-        return  this.name + " " + this.state.getName() + " " + this.getUpdatePeriod().toString();
+    public boolean isClientSetting() {
+        return this.host != null;
     }
 
-    public String getClientApresentation(String name) {
-        return  this.name + " CONECTAR " + name;
-    }
-
-    public String getProfile() {
-        return profile;
-    }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
-    }
-
-    public void addProcess(String runnable) {
-        this.mainProcesses.add(runnable);
-    }
-
-    public List<String> getMainProcesses() {
-        return mainProcesses;
+    public boolean isClientMainSetting() {
+        return !this.isClientSetting();
     }
 }

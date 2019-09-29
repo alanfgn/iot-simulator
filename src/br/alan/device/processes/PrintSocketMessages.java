@@ -15,7 +15,7 @@ public class PrintSocketMessages implements Runnable {
     @Override
     public void run() {
         try {
-            client.receive();
+            client.printAllMessages();
         } catch (IOException e){
             e.printStackTrace();
         }

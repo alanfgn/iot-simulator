@@ -18,7 +18,7 @@ public class Terminal {
     private static final String RUN = "run";
     private static final String CONNECT = "conectar";
 
-    public static Runnable interpret(String command){
+    public static Runnable interpret(String command) {
 
         String header = command.split(" ")[0];
 
@@ -29,35 +29,38 @@ public class Terminal {
                 return getConnectCommand(command);
             default:
                 throw new IllegalArgumentException();
-
         }
     }
 
-    public static RunCommand getRunCommand(String command){
-        try{
+    public static RunCommand getRunCommand(String command) {
+        try {
+
+            // file pattern definied in class
 
             String[] parameters = command.split(" ");
             List<DeviceSettings> devices = new ArrayList<>();
 
             List<String> conf = readFile(parameters[1]);
             String[] confParametes = conf.get(0).split(" ");
+
+            // config.txt
             DeviceSettings deviceSettings = new DeviceSettings(
-                    confParametes[0],
-                    Integer.valueOf(confParametes[3]),
-                    StateDeviceEnum.valueOfName(confParametes[1]),
-                    Integer.valueOf(confParametes[2]));
+                    confParametes[0], // name
+                    Integer.valueOf(confParametes[3]), // port
+                    confParametes[4], // role
+                    StateDeviceEnum.valueOfName(confParametes[1]), //state
+                    Integer.valueOf(confParametes[2])); // update time
 
-            if (confParametes.length > 4) {
-                deviceSettings.setProfile(confParametes[4]);
-            }
+            if (parameters.length > 2) { // devices.txt
+                for (String confDevice : readFile(parameters[2])) {
 
-            if(parameters.length > 2){
-                for(String confDevice : readFile(parameters[2])) {
                     String[] deviceParameters = confDevice.split(" ");
                     DeviceSettings otherDeviceSetting = new DeviceSettings(
-                            deviceParameters[0],
-                            deviceParameters[1],
-                            Integer.valueOf(deviceParameters[2]));
+                            deviceParameters[0], // name
+                            deviceParameters[1], // host
+                            Integer.valueOf(deviceParameters[2]), //port
+                            deviceParameters[3]); // role
+
 
                     devices.add(otherDeviceSetting);
                 }
@@ -71,9 +74,9 @@ public class Terminal {
         return null;
     }
 
-    public static ConnectCommand getConnectCommand(String command){
+    public static ConnectCommand getConnectCommand(String command) {
         String[] parameters = command.split(" ");
-        if(parameters.length == 5) {
+        if (parameters.length == 5) {
             return new ConnectCommand(
                     parameters[1],
                     parameters[2],
@@ -85,7 +88,7 @@ public class Terminal {
         }
     }
 
-    public static List<String> readFile(String filneName) throws  IOException{
+    public static List<String> readFile(String filneName) throws IOException {
         File file = new File(filneName);
         BufferedReader br = new BufferedReader(new FileReader(file));
 

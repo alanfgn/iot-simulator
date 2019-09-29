@@ -25,7 +25,7 @@ public class RandomTemperatures implements Runnable {
                     deviceClient.send(temperatura);
                 }
 
-                Thread.sleep((1000 * device.getUpdateTime()));
+                Thread.sleep((1000 * device.getDeviceSettings().getUpdateTime()));
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

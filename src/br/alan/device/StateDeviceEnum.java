@@ -15,14 +15,10 @@ public enum StateDeviceEnum {
     }
 
     public static StateDeviceEnum valueOfName(String name) {
-
         for(StateDeviceEnum state : values()) {
             if(state.getName().equalsIgnoreCase(name))
                 return state;
         }
-
         throw new IllegalArgumentException();
     }
-
-
 }
