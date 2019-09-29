@@ -1,7 +1,0 @@
-
-[squid:S1854"8Remove this useless assignment to local variable "file".(á½œÑþÿÿÿÿ8€àœ”Ï-
-Xsquid:S1118":Add a private constructor to hide the implicit public one.(ù¥¤¿8¶Á‚“Ï-
-Lsquid:S1481")Remove this unused "file" local variable.(á½œÑþÿÿÿÿ8€àœ”Ï-
-Qsquid:S1172%".Remove this unused method parameter "command".(Ÿ”§ˆÿÿÿÿÿ8îê•”Ï-
-Msquid:S1068
-"*Remove this unused "STATUS" private field.(¸¶õ¨úÿÿÿÿ8Á¡„“Ï-
