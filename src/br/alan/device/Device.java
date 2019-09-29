@@ -39,7 +39,7 @@ public class Device implements Runnable {
         try {
 
             this.serverSocket = new ServerSocket(deviceSettings.getPort());
-            this.print(" Ouvindo na porta: " + deviceSettings.getPort());
+            this.print("Ouvindo na porta: " + deviceSettings.getPort());
 
             if (this.deviceSettings.getState().equals(StateDeviceEnum.ATIVADO)
                     && this.deviceSettings.getRole() != null) {
@@ -50,7 +50,6 @@ public class Device implements Runnable {
                         .getDeviceProcess(this.deviceSettings.getRole(), this).getProcesses()) {
 
                     this.execute(process);
-                    this.print("Rodando " + process.getClass().getName());
                 }
             }
 
@@ -95,7 +94,7 @@ public class Device implements Runnable {
         Thread thread = new Thread(process);
         thread.start();
 
-        this.print("Executando " + process.getClass().getName());
+        this.print("Executando " + process.getClass().getSimpleName());
 
         this.processes.add(thread);
         return thread;

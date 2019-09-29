@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface Role {
 
-    String GARBAGE_TRUCK = "CR";
-    String RECYCLING_TRUCK = "CA";
+    String GARBAGE_TRUCK = "CA";
+    String RECYCLING_TRUCK = "CR";
     String CONTAINER = "CO";
 
 

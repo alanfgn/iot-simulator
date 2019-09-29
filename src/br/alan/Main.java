@@ -9,18 +9,18 @@ import java.util.Scanner;
 public class Main {
 
     public static List<Thread> processos =new ArrayList<>();
-//    public static String[] automation = { "run config.txt devices.txt", "run config-2.txt", "conectar Comp Temp"};
+    public static String[] automation = { "run config.txt devices.txt"};
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-//        for(String l: automation){
-//            Runnable runnable = Terminal.interpret(l);
-//            Thread thread = new Thread(runnable);
-//            thread.start();
-//            processos.add(thread);
-//        }
+        for(String l: automation){
+            Runnable runnable = Terminal.interpret(l);
+            Thread thread = new Thread(runnable);
+            thread.start();
+            processos.add(thread);
+        }
 
         while (true) {
             String command = sc.nextLine();
